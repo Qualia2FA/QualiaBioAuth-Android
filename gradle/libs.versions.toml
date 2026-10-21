@@ -1,0 +1,36 @@
+# Copyright (C) 2026 Qualia2FA contributors
+#
+# This library is free software; you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation; either version 3 of the License, or (at your option) any
+# later version.
+#
+# This library is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this library; if not, see <https://www.gnu.org/licenses/>.
+
+# Versions are pinned to the line the Android Gradle plugin and Kotlin release were
+# tested against: AGP 8.7 tops out at compileSdk 35, and Kotlin 2.1.21 is what the rest
+# of the project builds with, so a consumer sees the same toolchain on both sides.
+
+[versions]
+kotlin = "2.1.21"
+androidGradlePlugin = "8.7.3"
+androidxBiometric = "1.1.0"
+androidxActivity = "1.9.3"
+junit = "4.13.2"
+robolectric = "4.14.1"
+
+[libraries]
+androidxBiometric = { module = "androidx.biometric:biometric", version.ref = "androidxBiometric" }
+androidxActivity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
+junit = { module = "junit:junit", version.ref = "junit" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+
+[plugins]
+androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

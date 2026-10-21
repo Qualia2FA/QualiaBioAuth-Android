@@ -1,0 +1,6 @@
+﻿# Gradle and Android build outputs; the library publishes an AAR, nothing here is source.
+.gradle/
+build/
+local.properties
+*.iml
+.idea/

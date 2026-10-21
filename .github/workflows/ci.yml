@@ -1,0 +1,49 @@
+# Copyright (C) 2026 Qualia2FA contributors
+#
+# This library is free software; you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation; either version 3 of the License, or (at your option) any
+# later version.
+#
+# This library is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this library; if not, see <https://www.gnu.org/licenses/>.
+
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # The library compiles and tests against the published Android SDK; the Gradle
+      # wrapper pins the Gradle version, so only the SDK is installed here.
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Unit tests
+        run: ./gradlew :library:testDebugUnitTest --console=plain
+
+      - name: Assemble the release AAR
+        run: ./gradlew :library:assembleRelease --console=plain
+
+      # A publication that cannot be assembled is worse than one that fails here: the
+      # POM, the sources jar and the AAR are all produced by this task.
+      - name: Check the publication builds
+        run: ./gradlew :library:publishReleasePublicationToMavenLocal --console=plain
