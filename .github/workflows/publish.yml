@@ -95,6 +95,7 @@ jobs:
           response=$(curl --silent --show-error --fail \
             --user "$MAVEN_CENTRAL_USERNAME:$MAVEN_CENTRAL_PASSWORD" \
             --form "bundle=@library/build/qualia-bioauth-android.zip" \
+            --form "publishingType=AUTOMATIC" \
             https://central.sonatype.com/api/v1/publisher/upload)
           echo "deployment id: $response"
           echo "id=$response" >> "$GITHUB_OUTPUT"
@@ -108,7 +109,7 @@ jobs:
           DEPLOYMENT_ID: ${{ steps.upload.outputs.id }}
         run: |
           for attempt in $(seq 1 60); do
-            status=$(curl --silent --show-error --fail \
+            status=$(curl --silent --show-error \
               --user "$MAVEN_CENTRAL_USERNAME:$MAVEN_CENTRAL_PASSWORD" \
               "https://central.sonatype.com/api/v1/publisher/status?id=$DEPLOYMENT_ID")
             echo "attempt $attempt: $status"
