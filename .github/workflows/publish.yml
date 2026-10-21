@@ -35,7 +35,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - uses: android-actions/setup-android@v3
+      # The GitHub runner image already carries the Android SDK and ANDROID_HOME.
 
       - uses: gradle/actions/setup-gradle@v4
 
@@ -69,7 +69,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - uses: android-actions/setup-android@v3
+      # The GitHub runner image already carries the Android SDK and ANDROID_HOME.
 
       - uses: gradle/actions/setup-gradle@v4
 

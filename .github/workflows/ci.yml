@@ -33,7 +33,7 @@ jobs:
 
       # The library compiles and tests against the published Android SDK; the Gradle
       # wrapper pins the Gradle version, so only the SDK is installed here.
-      - uses: android-actions/setup-android@v3
+      # The GitHub runner image already carries the Android SDK and ANDROID_HOME.
 
       - uses: gradle/actions/setup-gradle@v4
 

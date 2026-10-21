@@ -1,0 +1,7 @@
+ci: use the runner's preinstalled Android SDK
+
+android-actions/setup-android@v3 installs the `tools` package, which no
+longer exists in the SDK repository, so both workflows failed before
+reaching the build. The GitHub runner image already provides the SDK and
+ANDROID_HOME, and the Gradle wrapper pins Gradle, so the step is dropped
+instead of replaced.
