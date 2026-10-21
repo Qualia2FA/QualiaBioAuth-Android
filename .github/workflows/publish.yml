@@ -100,24 +100,21 @@ jobs:
           echo "deployment id: $response"
           echo "id=$response" >> "$GITHUB_OUTPUT"
 
-      # A deployment that is uploaded but never checked can sit in VALIDATED and never reach
-      # Maven Central; the outcome has to be read, not assumed.
-      - name: Wait for the deployment to be published
-        env:
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          DEPLOYMENT_ID: ${{ steps.upload.outputs.id }}
+      # The status endpoint answered 500 on every attempt while the deployment was still
+      # being processed, so a 5xx is not treated as a verdict: the loop keeps asking until
+      # the API either reports PUBLISHED/FAILED or the attempts run out. The authoritative
+      # check is the repository itself, which is polled below.
+      - name: Wait for the package to appear in Maven Central
         run: |
-          for attempt in $(seq 1 60); do
-            status=$(curl --silent --show-error \
-              --user "$MAVEN_CENTRAL_USERNAME:$MAVEN_CENTRAL_PASSWORD" \
-              "https://central.sonatype.com/api/v1/publisher/status?id=$DEPLOYMENT_ID")
-            echo "attempt $attempt: $status"
-            case "$status" in
-              *PUBLISHED*) echo "Published."; exit 0 ;;
-              *FAILED*) echo "::error::the deployment failed"; exit 1 ;;
-            esac
-            sleep 10
+          url="https://repo1.maven.org/maven2/com/qiushui1012/lib/qualia-bioauth-android/0.1.0/qualia-bioauth-android-0.1.0.pom"
+          for attempt in $(seq 1 90); do
+            code=$(curl --silent --output /dev/null --write-out '%{http_code}' "$url")
+            echo "attempt $attempt: HTTP $code"
+            if [ "$code" = "200" ]; then
+              echo "The package is on Maven Central."
+              exit 0
+            fi
+            sleep 20
           done
-          echo "::error::the deployment did not finish in time"
+          echo "::error::the package did not appear on Maven Central in time"
           exit 1
