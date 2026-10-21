@@ -1,0 +1,4 @@
+# Shell scripts must keep LF without an exec-bit surprise; the Gradle wrapper is run by CI.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.jar binary
