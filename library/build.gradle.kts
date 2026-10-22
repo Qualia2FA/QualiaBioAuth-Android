@@ -85,6 +85,10 @@ publishing {
     publications {
         create<MavenPublication>("release") {
             afterEvaluate { from(components["release"]) }
+            // The Maven artifact id is part of the coordinate a consumer writes, so it is
+            // stated here rather than inherited from the Gradle module name: `library` is
+            // this repository's folder, not the thing anyone depends on.
+            artifactId = "qualia-bioauth-android"
             pom {
                 name.set("qualia-bioauth-android")
                 description.set(
