@@ -106,7 +106,7 @@ publishing {
                     developer {
                         id.set("qiushui1012")
                         name.set("Qualia2FA contributors")
-                        email.set("dev@qiushui1012.com")
+                        email.set("qiushui1012@foxmail.com")
                     }
                 }
                 scm {
